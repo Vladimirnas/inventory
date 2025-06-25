@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Печать QR-кодов помещений</title>
+    <link rel="stylesheet" href="/static/css/print_qr.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header no-print">
+            <h1>Печать QR-кодов помещений</h1>
+            <p>Настроено для принтера этикеток Godex 500 (размер этикетки 5см x 3см)</p>
+            <button class="print-btn" onclick="window.print()">Печать</button>
+            <a href="/location-qr" class="back-btn">Назад</a>
+        </div>
+        
+        <div class="print-grid">
+            {% for location in locations %}
+                <div class="qr-item">
+                    <img src="/static/{{ location.qr_image }}" alt="QR код {{ location.location_name }}">
+                    <div class="qr-info">
+                        <!-- <div class="qr-name">{{ location.location_name }}</div>
+                        <div class="qr-code">{{ location.qr_code }}</div> -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="/static/js/print_qr.js"></script>
+</body>
+</html> 

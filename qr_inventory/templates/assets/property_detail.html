@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ asset.asset_name }} - Детальная информация{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Детальная информация об имуществе</h2>
+                <div>
+                    <a href="{% url 'property_list' %}" class="btn btn-secondary">Вернуться к списку</a>
+                    {% if not asset.is_written_off %}
+                    <a href="{% url 'edit_property' asset.id %}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Редактировать
+                    </a>
+                    <a href="{% url 'write_off_asset' asset.id %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Списать
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Информация об имуществе -->
+                <div class="col-md-7">
+                    <table class="table table-striped">
+                        <tr>
+                            <th style="width: 200px;">Инвентарный номер:</th>
+                            <td>{{ asset.inventory_number }}</td>
+                        </tr>
+                        <tr>
+                            <th>Наименование:</th>
+                            <td>{{ asset.asset_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Количество:</th>
+                            <td>{{ asset.quantity }}</td>
+                        </tr>
+                        <tr>
+                            <th>Балансовая стоимость:</th>
+                            <td>{{ asset.book_value|default:"Не указана" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ответственный:</th>
+                            <td>
+                                {% if not asset.is_written_off %}
+                                <div class="d-flex align-items-center">
+                                    <span id="responsible-text">{{ asset.responsible|default:"Не указан" }}</span>
+                                    <button class="btn btn-sm btn-outline-primary ms-2" id="edit-responsible-btn">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2 d-none" id="responsible-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="responsible-input" 
+                                               value="{{ asset.responsible|default:'' }}">
+                                        <button class="btn btn-primary" id="save-responsible-btn">Сохранить</button>
+                                        <button class="btn btn-secondary" id="cancel-responsible-btn">Отмена</button>
+                                    </div>
+                                </div>
+                                {% else %}
+                                {{ asset.responsible|default:"Не указан" }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Помещение:</th>
+                            <td>{{ asset.location.name|default:"Не указано" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Структурное подразделение:</th>
+                            <td>{{ asset.department.name|default:"Не указано" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Год выпуска:</th>
+                            <td>{{ asset.year_of_manufacture|default:"Не указано" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Статус:</th>
+                            <td>
+                                {% if asset.is_written_off %}
+                                <span class="badge bg-danger">Списано {{ asset.write_off_date|date:"d.m.Y" }}</span>
+                                {% else %}
+                                <span class="badge bg-success">В эксплуатации</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Дата создания:</th>
+                            <td>{{ asset.created_at|date:"d.m.Y H:i" }}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- Фото и QR-код -->
+                <!-- <div class="col-md-5 text-center">
+                    {% if asset.photo %}
+                    <div class="mb-4">
+                        <h5>Фото:</h5>
+                        <img src="{{ asset.photo.url }}" alt="Фото имущества" class="img-fluid img-thumbnail" style="max-height: 300px;">
+                    </div>
+                    {% endif %}
+                    
+                    {% if asset.qr_image %}
+                    <div>
+                        <h5>QR-код:</h5>
+                        <img src="{{ asset.qr_image.url }}" alt="QR-код" class="img-fluid" style="max-width: 200px;">
+                        <div class="mt-2">
+                            <a href="{{ asset.qr_image.url }}" download class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download"></i> Скачать QR-код
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not asset.is_written_off %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editBtn = document.getElementById('edit-responsible-btn');
+        const saveBtn = document.getElementById('save-responsible-btn');
+        const cancelBtn = document.getElementById('cancel-responsible-btn');
+        const responsibleText = document.getElementById('responsible-text');
+        const responsibleForm = document.getElementById('responsible-form');
+        const responsibleInput = document.getElementById('responsible-input');
+        
+        editBtn.addEventListener('click', function() {
+            responsibleForm.classList.remove('d-none');
+            editBtn.classList.add('d-none');
+        });
+        
+        cancelBtn.addEventListener('click', function() {
+            responsibleForm.classList.add('d-none');
+            editBtn.classList.remove('d-none');
+            responsibleInput.value = responsibleText.textContent === 'Не указан' ? '' : responsibleText.textContent;
+        });
+        
+        saveBtn.addEventListener('click', function() {
+            const newResponsible = responsibleInput.value.trim();
+            
+            fetch('{% url "update_responsible" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    asset_id: {{ asset.id }},
+                    responsible: newResponsible
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    responsibleText.textContent = newResponsible || 'Не указан';
+                    responsibleForm.classList.add('d-none');
+                    editBtn.classList.remove('d-none');
+                } else {
+                    alert('Ошибка при обновлении ответственного');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при обновлении ответственного');
+            });
+        });
+    });
+</script>
+{% endif %}
+{% endblock %} 

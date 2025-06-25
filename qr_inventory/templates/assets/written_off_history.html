@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}История списаний{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="text-center">
+                <h1 class="h3 mb-0 text-gray-800">История списаний</h1>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            {% if page_obj %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4">Фото</th>
+                            <th class="text-nowrap">Инв. номер</th>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                            <th class="text-nowrap">Дата списания</th>
+                            <th>Помещение</th>
+                            <th>Подразделение</th>
+                            <th>Ответственный</th>
+                            <th>Стоимость</th>
+                        </tr>
+                    </thead>
+                    <!-- <tbody>
+                        {% for item in page_obj %}
+                        <tr>
+                            <td class="px-4">
+                                {% if item.photo_link %}
+                                <img src="{{ item.photo_link }}" 
+                                     alt="Фото имущества" 
+                                     class="rounded" 
+                                     style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="text-muted d-flex align-items-center justify-content-center" 
+                                     style="width: 50px; height: 50px; background-color: #f8f9fa; border-radius: 4px;">
+                                    <i class="bi bi-image text-muted"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle text-nowrap">{{ item.inventory_number }}</td>
+                            <td class="align-middle">{{ item.asset_name }}</td>
+                            <td class="align-middle">{{ item.quantity }}</td>
+                            <td class="align-middle text-nowrap">
+                                {% if item.write_off_date %}
+                                    {{ item.write_off_date|date:"d.m.Y" }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.location_name %}
+                                    {{ item.location_name }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.department_name %}
+                                    {{ item.department_name }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.responsible %}
+                                    {{ item.responsible }}
+                                {% else %}
+                                    <span class="text-muted">Не указан</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.book_value %}
+                                    {{ item.book_value }}
+                                {% else %}
+                                    <span class="text-muted">Не указана</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody> -->
+
+
+
+                    <tbody>
+                        {% for item in page_obj %}
+                        <tr>
+                            <td class="px-4">
+                                {% if item.photo %}
+                                <img src="{{ item.photo.url }}" 
+                                    alt="Фото имущества" 
+                                    class="rounded" 
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="text-muted d-flex align-items-center justify-content-center" 
+                                    style="width: 50px; height: 50px; background-color: #f8f9fa; border-radius: 4px;">
+                                    <i class="bi bi-image text-muted"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle text-nowrap">{{ item.inventory_number }}</td>
+                            <td class="align-middle">{{ item.asset_name }}</td>
+                            <td class="align-middle">{{ item.total_written_off }}</td>
+                            <td class="align-middle text-nowrap">
+                                {% if item.write_off_date %}
+                                    {{ item.write_off_date|date:"d.m.Y" }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.location %}
+                                    {{ item.get_location_name }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.department %}
+                                    {{ item.department.name }}
+                                {% else %}
+                                    <span class="text-muted">Не указано</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.responsible %}
+                                    {{ item.responsible }}
+                                {% else %}
+                                 <span class="text-muted">Не указан</span>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if item.book_value %}
+                                    {{ item.book_value }}
+                                {% else %}
+                                    <span class="text-muted">Не указана</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                     </tbody>
+
+
+
+
+                </table>
+            </div>
+
+            {% if page_obj.has_other_pages %}
+            <div class="card-footer bg-white py-3">
+                <nav aria-label="Страницы истории списаний">
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">
+                                    <i class="bi bi-chevron-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-double-left"></i>
+                                </span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-left"></i>
+                                </span>
+                            </li>
+                        {% endif %}
+                        
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ i }}</span>
+                                </li>
+                            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                    <i class="bi bi-chevron-double-right"></i>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-right"></i>
+                                </span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-double-right"></i>
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <div class="card-body">
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    История списаний пуста
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,1119 @@
+{% load inventory_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Форма ИНВ-18</title>
+    {% block extra_css %}
+    <style>
+
+/* ----- */
+        @font-face {
+            font-family: 'Times New Roman';
+            src: local('Times New Roman');
+        }
+        
+        @font-face {
+            font-family: 'Arial';
+            src: local('Arial');
+        }
+        /* ------- */
+        @page {
+            margin: .79in .39in .39in .79in;
+            mso-header-margin: .2in;
+            mso-footer-margin: .2in;
+            mso-page-orientation: landscape;
+        }
+        
+        @media print {
+            .header-section {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                text-align: left;
+            }
+        }
+        
+        body {
+            /* font-family: Arial, sans-serif; */
+            margin: 20px;
+            margin-top: 40px;
+        }
+
+        .xl65 {
+            mso-style-parent: style0;
+            text-align: center;
+        }
+
+        .xl66 {
+            mso-style-parent: style0;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .xl73 {
+            mso-style-parent: style0;
+            text-align: center;
+            border: .5pt solid black;
+            background: #f8f9fa;
+        }
+
+        .table-header {
+            font-weight: bold;
+        }
+
+        .table-main {
+            border-collapse: collapse;
+            width: 100%;
+            /* margin-top: 20px; */
+        }
+
+        .table-main th, .table-main td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 9pt;
+            
+        }
+
+        .table-header-small td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt !important;
+        }
+
+        /* .header-section {
+            margin-bottom: 20px;
+        } */
+
+       
+
+        .form-title {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid black;
+            display: inline-block;
+            width: 200px;
+            margin: 0 10px;
+        }
+/* ------ */
+
+        .header-section {
+            font-family: 'Arial', sans-serif;
+            font-size: 9pt;
+        }
+
+        .small-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 9pt;
+        }
+
+        .arial-small {
+            font-family: 'Arial', sans-serif;
+            font-size: 9pt;
+        }
+
+        /* Применяем шрифты к конкретным элементам */
+        .form-header {
+            
+            font-size: 12pt;
+            font-weight: bold !important;
+        }
+
+        .table-times th {
+            font-family: 'Times New Roman', serif;
+            font-size: 11pt;
+        }
+
+        .table-times td {
+            font-family: 'Times New Roman', serif;
+            font-size: 11pt;
+        }
+
+        .comment-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 9pt;
+        }
+
+        .times-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 11pt;
+        }
+
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+    
+    <!-- Верхняя часть формы -->
+    <div class="small-text" style="width: 100%; display: flex; justify-content: flex-end; position: relative; bottom: 5px;">
+        <div style="text-align: left; position: absolute; right: 0; top: 0;">
+            Унифицированная форма № ИНВ-1<br>
+            Утверждена постановлением Госкомстата<br>
+            России от 18.08.98 № 88
+        </div>
+    </div>
+    <br>
+    <br>
+
+    
+    
+    
+    
+
+    <!-- Информация об организации
+    <div class="org-info">
+        <div>{{ organization_name }}</div>
+        <div style="font-size: 8pt;">(организация)</div>
+    </div> -->
+
+    <!-- После информации об организации добавляем -->
+    <div class="table-times" style="width: 100%;">
+        <table class="header-section" style="width: 100%; border-collapse: collapse;">
+
+            <tr>
+                <td style="width: 80%;"></td>
+                <td style="padding-right: 10px; visibility: hidden;">Форма по ОКУД</td>
+                <td style="border: 1px solid black; width: 100px; text-align: center;">Код</td>
+            </tr>
+
+            <tr>
+                <td style="width: 80%;"></td>
+                <td style="text-align: right; padding-right: 8px;">Форма по ОКУД</td>
+                <td class="arial-small" style="border: 1px solid black; width: 100px; text-align: center;">0317016</td>
+            </tr>
+            <!-- <tr>
+                <td></td>
+                <td style="text-align: right; padding-right: 10px;">по ОКПО</td>
+                <td style="border: 1px solid black;"></td>
+            </tr> -->
+            
+            <!-- <tr>
+                <td></td>
+                <td style="text-align: right; padding-right: 10px; visibility: hidden;">по ОКПО</td>
+                <td style="border: 1px solid black;"></td>
+            </tr> -->
+
+            
+            
+            
+        </table>
+
+        
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0px;">
+            <tr>
+                <!-- Основной контент -->
+                <td style="border-bottom: 1px solid black;"></td>
+                <td style="width: 6%; padding-right: 5px; padding-left: 0px;">по ОКПО</td>
+                <td style="border: 1px solid black; width: 100px; position: relative;"></td> <!-- Родительский контейнер -->
+            
+                <!-- Надпись "организация" под ячейкой -->
+                <tr style="position: absolute; left: 50%; transform: translateX(-50%);">
+                    <td style="text-align: center; font-size: 8pt;">(организация)</td>
+                </tr>
+            </tr>
+
+            
+        </table>
+
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0px;">
+            <tr>
+                <!-- <td style="width: 30%;">Вид деятельности</td> -->
+                 
+                <td style="border-bottom: 1px solid black;"></td>
+                <td style="width: 5%; padding-right: 5px; padding-left: 0px; border-bottom: 1px solid black;">&nbsp;</td>
+                <td style="border: 1px solid black; width: 100px;"></td>
+                <tr style="position: absolute; left: 50%; transform: translateX(-50%);">
+                    <td style="text-align: center; font-size: 8pt;">(структурное подразделение)</td>
+                </tr>
+                
+                <!-- <tr>
+                    <td style="text-align: center; font-size: 8pt;">(организация)</td>
+                </tr> -->
+
+                
+
+            </tr>
+
+            
+        </table>
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 80%;"></td>
+                <td style="padding-right: 8px; text-align: right;">Вид деятельности</td>
+                <td style="border: 1px solid black; width: 100px; text-align: center;"></td>
+            </tr>
+        </table>
+
+
+        
+      
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 30%; margin-left: 5px; padding-left: 25px;">Основание для проведения инвентаризации:</td>
+                <td style="text-align: center; border-bottom: 1px solid black;">приказ, постановление, распоряжение</td>
+                <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">номер</td>
+                <td style="border: 1px solid black; width: 100px;"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="text-align: center; font-size: 8pt;">(ненужное зачеркнуть)</td>
+                <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+                <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-collapse: collapse; ">
+            <tr>
+                <td style="width: 30%;"></td>
+                <td style="width: 40%;"></td>
+                <td style="text-align: right; padding-right: 10px;">Дата начала инвентаризации</td>
+                <td style="border: 1px solid black; width: 100px;">{{ start_date }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="text-align: right; padding-right: 10px;">Дата окончания инвентаризации</td>
+                <td style="border: 1px solid black;">{{ end_date }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="text-align: right; padding-right: 10px;">Вид операции</td>
+                <td style="border: 1px solid black;"></td>
+            </tr>
+        </table>
+        <div style="margin-bottom: 71px;  margin-top: 29px;">
+            <table border="1" style=" display: flex; border-collapse: collapse; width: auto; position: absolute; right: 220px; margin-bottom: 110px;">
+              <tr>
+                <th style="padding: 5px;">Номер документа</th>
+                <th style="padding: 5px;">Дата составления</th>
+              </tr>
+              <tr>
+                <td style="padding: 5px;"></td>
+                <td style="padding: 5px;">{{ end_date }}</td>
+              </tr>
+            </table>
+        </div>
+        <div style="display: flex; align-items: center; margin: 20px 0; margin-top: 70px;">
+            <div class="form-header" style=" text-align: center; flex: 1;">
+                ИНВЕНТАРИЗАЦИОННАЯ ОПИСЬ<br>
+                основных средств
+            </div>
+        
+            
+        </div>
+        
+    
+    <!-- <div class="times-text" style="margin-left: 5px; padding-left: 120px;">
+            Основные средства 
+    </div> -->
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 13%; margin-left: 5px; padding-left: 30px;">Основные средства</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 0%; margin-left: 5px; padding-left: 21px;">&nbsp;</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        </tr>
+    </table>
+    <!-- border-collapse: collapse; -->
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 11%; margin-left: 5px; padding-left: 30px;">находящиеся</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(в собственности организации, на ответственном хранении, в т.ч. арендованные)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 13%; margin-left: 5px; padding-left: 30px;">Местонахождение</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        </tr>
+    </table>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 13%; margin-left: 5px; padding-left: 30px;">Арендодатель *</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        </tr>
+    </table>
+
+    <div style="display: flex; align-items: center; margin: 20px 0; margin-top: 70px;">
+        <div style=" text-align: center; flex: 1;">
+            <b>РАСПИСКА</b><br>
+            К началу проведения инвентаризации все расходные и приходные документы на основные средства сданы в бухгалтерию, и все
+основные средства, поступившие на мою (нашу) ответственность, оприходованы, а выбывшие списаны в расход.
+        </div>
+    </div>
+
+    <div style="padding-left: 110px;">
+        Лицо(а), ответственное(ые) за сохранность основных средств:
+    </div>
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 47%; margin-left: 5px; padding-left: 30px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 47%; margin-left: 5px; padding-left: 30px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 47%; margin-left: 5px; padding-left: 30px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 2%;">&nbsp;</td>
+            <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <div style="padding-left: 600px;">
+        * Заполняется по основным средствам, полученным по договору аренды.
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <div class="times-text" style="text-align: right; margin: 0px 0; margin-bottom: 5px;">
+        2-я страница формы № ИНВ-1
+    </div>
+    <br>
+        
+
+    
+
+    <table class="table-main">
+        <tr>
+            <th rowspan="3" class="table-header">Номер по порядку</th>
+            <th rowspan="3" class="table-header">Наименование и краткая характеристика объекта</th>
+            <th rowspan="3" class="table-header" style="white-space: pre-line;">Арендодатель, срок аренды</th>
+            <th rowspan="3" class="table-header">Год выпуска (постройки)</th>
+            <th colspan="3" class="table-header">Номер</th>
+            <th colspan="4" class="table-header">Результаты инвентаризации</th>
+        </tr>
+        <tr>
+            <th rowspan="2" class="table-header">инвентарный</th>
+            <th rowspan="2" class="table-header">заводской</th>
+            <th rowspan="2" class="table-header" style="white-space: pre-line;">паспорта (документа о регистрации)</th>
+            <th colspan="2" class="table-header">фактическое наличие</th>
+            <th colspan="2" class="table-header">недостача</th>
+        </tr>
+        <tr>
+            <th class="table-header">количество, шт.</th>
+            <th class="table-header">стоимость, руб.</th>
+            <th class="table-header">количество, шт.</th>
+            <th class="table-header">стоимость, руб.</th>
+        </tr>
+        <tr>
+            <td class="table-header-small">1</td>
+            <td class="table-header-small">2</td>
+            <td class="table-header-small">3</td>
+            <td class="table-header-small">4</td>
+            <td class="table-header-small">5</td>
+            <td class="table-header-small">6</td>
+            <td class="table-header-small">7</td>
+            <td class="table-header-small">8</td>
+            <td class="table-header-small">9</td>
+            <td class="table-header-small">10</td>
+            <td class="table-header-small">11</td>
+        </tr>
+        
+        {% for item in items %}
+        {% if forloop.counter <= 13 %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.asset.asset_name|default:"-" }}</td>
+            <td>-</td>
+            <td>{{ item.asset.year_of_manufacture|default:"-" }}</td>
+            <td>{{ item.asset.inventory_number|default:"-" }}</td>
+            <td>-</td>
+            <td>-</td>
+            {% if item.inventory_status == 'completed' %}
+                <td>{{ item.total_quantity }}</td>
+                <td>{{ item.asset.book_value|default:"-" }}</td>
+                <td>-</td>
+                <td>-</td>
+            {% else %}
+                <td>{% if item.scanned_quantity > 0 %}{{ item.scanned_quantity }}{% else %}-{% endif %}</td>
+                <td>{% if item.scanned_quantity > 0 %}{{ item.asset.book_value|default:"0"|floatformat:2 }}{% else %}-{% endif %}</td>
+                <td>{{ item.missing_quantity }}</td>
+                <td>{% if item.total_quantity > item.scanned_quantity %}{{ item.asset.book_value|default:"0"|floatformat:2 }}{% else %}-{% endif %}</td>
+            {% endif %}
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Добавляем пустые строки до 13 -->
+        {% with items_count=items|length %}
+        {% if items_count < 13 %}
+            {% for i in "xxxxxxxxxxxxx" %}
+                {% if forloop.counter > items_count %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Итог первой таблицы -->
+        <tr>
+            <td colspan="7" style="text-align: right; border: none;"><b>Итого</b></td>
+            {% with total_scanned=0 total_quantity=0 scanned_value=0 missing_value=0 %}
+                {% for item in items %}
+                    {% if forloop.counter <= 13 %}
+                        {% with total_scanned=total_scanned|add:item.scanned_quantity %}
+                        {% with total_quantity=total_quantity|add:item.total_quantity %}
+                        {% if item.scanned_quantity > 0 %}
+                            {% with scanned_value=scanned_value|add:item.asset.book_value|default:"0" %}{% endwith %}
+                        {% endif %}
+                        {% if item.total_quantity > item.scanned_quantity %}
+                            {% with diff=item.total_quantity|add:"-"|add:item.scanned_quantity %}
+                            {% with missing_value=missing_value|add:item.asset.book_value|default:"0" %}{% endwith %}
+                            {% endwith %}
+                        {% endif %}
+                        {% endwith %}
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+                
+               <!-- Фактическое наличие -->
+                <td>{% if total_scanned_1 > 0 %}{{ total_scanned_1 }}{% else %}-{% endif %}</td>
+                <!-- Стоимость просканированных -->
+                <td>{% if scanned_value_1 > 0 %}{{ scanned_value_1|floatformat:2 }}{% else %}-{% endif %}</td>
+                <!-- Недостача -->
+                <td>{{ missing_count_1 }}</td>
+                <!-- Стоимость непросканированных -->
+                <td>{% if missing_value_1 > 0 %}{{ missing_value_1|floatformat:2 }}{% else %}-{% endif %}</td>
+            {% endwith %}
+        </tr>
+    </table>
+    <br>
+    <div>
+        Итого по странице:
+    </div>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 35%; margin-left: 5px; padding-left: 125px;">а) количество порядковых номеров</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 35%; margin-left: 5px; padding-left: 125px;">б) общее количество единиц фактически</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 26%; margin-left: 5px; padding-left: 125px;">в) на сумму фактически</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 0%; margin-left: 5px; padding-left: 125px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">руб.</td>
+            <td style="width: 5%; text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">коп.</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+    
+  <!-- Дополнительные таблицы по 13 строк, если есть еще оборудование -->
+  {% if items|length > 13 %}
+    {% with items_after_13=items|slice:"13:" %}
+        {% for i in items_after_13 %}
+            {% if forloop.counter0|divisibleby:13 and forloop.counter0 > 0 %}
+                </table>
+                <br>
+                <div class="times-text" style="text-align: right; margin: 0px 0; margin-bottom: 5px;">
+                    2-я страница формы № ИНВ-1
+                </div>
+                <br>
+                <table class="table-main">
+                    <tr>
+                        <th rowspan="3" class="table-header">Номер по порядку</th>
+                        <th rowspan="3" class="table-header">Наименование и краткая характеристика объекта</th>
+                        <th rowspan="3" class="table-header" style="white-space: pre-line;">Арендодатель, срок аренды</th>
+                        <th rowspan="3" class="table-header">Год выпуска (постройки)</th>
+                        <th colspan="3" class="table-header">Номер</th>
+                        <th colspan="4" class="table-header">Результаты инвентаризации</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2" class="table-header">инвентарный</th>
+                        <th rowspan="2" class="table-header">заводской</th>
+                        <th rowspan="2" class="table-header" style="white-space: pre-line;">паспорта (документа о регистрации)</th>
+                        <th colspan="2" class="table-header">фактическое наличие</th>
+                        <th colspan="2" class="table-header">недостача</th>
+                    </tr>
+                    <tr>
+                        <th class="table-header">количество, шт.</th>
+                        <th class="table-header">стоимость, руб.</th>
+                        <th class="table-header">количество, шт.</th>
+                        <th class="table-header">стоимость, руб.</th>
+                    </tr>
+                    <tr>
+                        <td class="table-header-small">1</td>
+                        <td class="table-header-small">2</td>
+                        <td class="table-header-small">3</td>
+                        <td class="table-header-small">4</td>
+                        <td class="table-header-small">5</td>
+                        <td class="table-header-small">6</td>
+                        <td class="table-header-small">7</td>
+                        <td class="table-header-small">8</td>
+                        <td class="table-header-small">9</td>
+                        <td class="table-header-small">10</td>
+                        <td class="table-header-small">11</td>
+                    </tr>
+            {% endif %}
+            
+            <tr>
+                <td>{{ forloop.counter|add:13 }}</td>
+                <td>{{ i.asset.asset_name|default:"-" }}</td>
+                <td>-</td>
+                <td>{{ i.asset.year_of_manufacture|default:"-" }}</td>
+                <td>{{ i.asset.inventory_number|default:"-" }}</td>
+                <td>-</td>
+                <td>-</td>
+                {% if i.inventory_status == 'completed' %}
+                    <td>{{ i.total_quantity }}</td>
+                    <td>{{ i.asset.book_value|default:"-" }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                {% else %}
+                    <td>{% if i.scanned_quantity > 0 %}{{ i.scanned_quantity }}{% else %}-{% endif %}</td>
+                    <td>{% if i.scanned_quantity > 0 %}{{ i.asset.book_value|default:"0"|floatformat:2 }}{% else %}-{% endif %}</td>
+                    <td>{% with missing=i.total_quantity|add:"-"|add:i.scanned_quantity %}{{ missing }}{% endwith %}</td>
+                    <td>{% if i.total_quantity > i.scanned_quantity %}{{ i.asset.book_value|default:"0"|floatformat:2 }}{% else %}-{% endif %}</td>
+                {% endif %}
+            </tr>
+            
+            {% if forloop.last or forloop.counter|divisibleby:13 %}
+                {% with remaining=13|add:"-"|add:forloop.counter|divisibleby:13 %}
+                    {% if remaining > 0 %}
+                        {% for j in remaining|get_range %}
+                            <tr>
+                                <td>{{ forloop.counter|add:forloop.parentloop.counter|add:13 }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Итог таблицы -->
+                <tr>
+                    <td colspan="7" style="text-align: right; border: none;"><b>Итого</b></td>
+                    
+                    {% with all_items=items %}
+                        {% with total_scanned=0 total_quantity=0 scanned_value=0 missing_value=0 %}
+                            {% for item in all_items %}
+                                {% with total_scanned=total_scanned|add:item.scanned_quantity %}
+                                {% with total_quantity=total_quantity|add:item.total_quantity %}
+                                {% endwith %}
+                                {% endwith %}
+                            {% endfor %}
+                            
+                            <!-- Фактическое наличие -->
+                            <td>{% if total_scanned == 0 %}-{% else %}{{ total_scanned }}{% endif %}</td>
+                            <!-- Стоимость просканированных -->
+                            <td>-</td>
+                            <!-- Недостача -->
+                            <td>{{ total_quantity|add:"-"|add:total_scanned }}</td>
+                            <!-- Стоимость непросканированных -->
+                            <td>-</td>
+                        {% endwith %}
+                    {% endwith %}
+                </tr>
+                
+                <br>
+                <div>
+                    Итого по странице:
+                </div>
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 35%; margin-left: 5px; padding-left: 125px;">а) количество порядковых номеров</td>
+                        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+                        <td style="width: 2%;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+                        <td style="text-align: center; font-size: 8pt;"></td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 35%; margin-left: 5px; padding-left: 125px;">б) общее количество единиц фактически</td>
+                        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+                        <td style="width: 2%;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+                        <td style="text-align: center; font-size: 8pt;"></td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 26%; margin-left: 5px; padding-left: 125px;">в) на сумму фактически</td>
+                        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+                        <td style="width: 2%;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+                        <td style="text-align: center; font-size: 8pt;"></td>
+                    </tr>
+                </table>
+
+
+                <table style="width: 100%; margin-bottom: 100px;">
+                    <tr>
+                        <td style="width: 0%; margin-left: 5px; padding-left: 125px;"></td>
+                        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+                        <td style="width: 2%;">руб.</td>
+                        <td style="width: 5%; text-align: center; border-bottom: 1px solid black;"></td>
+                        <td style="width: 2%;">коп.</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+                        <td style="text-align: center; font-size: 8pt;"></td>
+                    </tr>
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+{% endif %}
+        
+        
+
+    
+
+
+
+<div class="times-text" style="text-align: right; margin: 0px 0; margin-bottom: 5px;">
+    2-я страница формы № ИНВ-1
+</div>
+    <div>
+        Итого по описи:
+    </div>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 35%; margin-left: 5px; padding-left: 125px;">а) количество порядковых номеров</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 35%; margin-left: 5px; padding-left: 125px;">б) общее количество единиц фактически</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 35%; margin-left: 5px; padding-left: 125px;">в) на сумму фактически</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">&nbsp;</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 0%; margin-left: 5px; padding-left: 125px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">руб.</td>
+            <td style="width: 5%; text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 2%;">коп.</td>
+            
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(прописью)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <div>
+        Все подсчеты итогов по строкам, страницам и в целом по инвентаризационной описи основных средств проверены.
+    </div>
+    <br>
+   
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 23%; margin-left: 5px;">Председатель комиссии</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 19%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 29%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 13%;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 23%; margin-left: 5px;">Члены комиссии:</td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 19%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 29%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 13%;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            
+            <td style="width: 23%; margin-left: 5px; padding-left: 30px;"></td>
+            <td style="text-align: center; border-bottom: 1px solid black;"></td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 19%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 1.5%;">&nbsp;</td>
+            <td style="width: 29%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+            <td style="width: 13%;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 8pt;">(должность)</td>
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+            
+            <td style="text-align: center; font-size: 8pt;"></td>
+            <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+            <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+            <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+        </tr>
+    </table>
+<!-- <br> -->
+    <div><p style="text-indent: 20px;">
+        Все основные средства, поименованные в настоящей инвентаризационной описи с №________________ по №________________, 
+        комиссией проверены в натуре в моем (нашем) присутствии и внесены в опись, в связи с чем претензий к инвентаризационной 
+        комиссии не имею (не имеем). Основные средства, перечисленные в описи, находятся на моем (нашем) ответственном хранении.
+    </p></div>
+<!-- <br> -->
+
+
+
+<table style="width: 100%;">
+    <tr>
+        
+        <td style="width: 47%; margin-left: 5px; padding-left: 10px;">Лицо(а), ответственное(ые) за сохранность основных средств:</td>
+        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center; font-size: 8pt;">(должность)</td>
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+        
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+    </tr>
+</table>
+
+<table style="width: 100%;">
+    <tr>
+        
+        <td style="width: 47%; margin-left: 5px; padding-left: 30px;"></td>
+        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center; font-size: 8pt;">(должность)</td>
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+        
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+        <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+        <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+    </tr>
+</table>
+
+<table style="width: 100%;">
+    <tr>
+        
+        <td style="width: 47%; margin-left: 5px; padding-left: 30px;"></td>
+        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center; font-size: 8pt;">(должность)</td>
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+        
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+        <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+        <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+    </tr>
+</table>
+
+<!-- <br> -->
+
+<div style="text-align: right; margin-right: 10px; padding-right: 300px;">
+    «____» ______________________ ____г.
+</div>
+
+<table style="width: 100%;">
+    <tr>
+        
+        <td style="width: 47%; margin-left: 5px; padding-left: 30px;">Указанные в настоящей описи данные и расчеты проверил</td>
+        <td style="text-align: center; border-bottom: 1px solid black;"></td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 20%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+        <td style="width: 2%;">&nbsp;</td>
+        <td style="width: 14%; text-align: right; text-align: center; border-bottom: 1px solid black;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: center; font-size: 8pt;">(должность)</td>
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(подпись)</td>
+        
+        <td style="text-align: center; font-size: 8pt;"></td>
+        <td style="text-align: center; font-size: 8pt;">(расшифровка подписи)</td>
+        <!-- <td style="border: 1px solid black; width: 4%; text-align: right; text-align: center;">дата</td>
+        <td style="border: 1px solid black;">{{ inventory_date|default:"" }}</td> -->
+    </tr>
+</table>
+
+<div style="text-align: right; margin-right: 10px; padding-right: 300px;">
+    «____» ______________________ ____г.
+</div>
+
+
+    
+
+    
+<br>
+    
+    
+  
+</body>
+</html> 

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Завершение инвентаризации{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h2 class="card-title">Завершение инвентаризации</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <p><i class="bi bi-info-circle-fill me-2"></i> Вы собираетесь завершить текущую инвентаризацию.</p>
+                        <p>После завершения вы не сможете продолжить сканирование QR-кодов в рамках этой инвентаризации.</p>
+                        <p>Все несканированные объекты будут отмечены как отсутствующие.</p>
+                    </div>
+                    
+                    <div class="inventory-summary mb-4">
+                        <h4>Сводка инвентаризации</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Тип инвентаризации:</strong> {{ inventory.inventory_type|title }}</p>
+                                <p><strong>Дата начала:</strong> {{ inventory.start_date|date:"d.m.Y" }}</p>
+                                <p><strong>Всего объектов:</strong> {{ inventory.items_count }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Просканировано:</strong> {{ scanned_count|default:0 }}</p>
+                                <p><strong>Не просканировано:</strong> {{ not_scanned_count|default:0 }}</p>
+                                <p><strong>Прогресс:</strong> {{ progress|default:0 }}%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Скрытое поле inventory_id -->
+                        {{ form.inventory_id }}
+                        
+                        <!-- Чекбокс для подтверждения -->
+                        <div class="form-check mb-3">
+                            {{ form.confirm }}
+                            <label class="form-check-label" for="{{ form.confirm.id_for_label }}">
+                                {{ form.confirm.label }}
+                            </label>
+                            {% if form.confirm.errors %}
+                            <div class="text-danger">
+                                {% for error in form.confirm.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'current_inventory' %}" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-success">Завершить инвентаризацию</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Автоматическое увеличение высоты текстового поля
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('id_comment');
+        if (textarea) {
+            textarea.setAttribute('class', 'form-control');
+            textarea.setAttribute('rows', '4');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    });
+</script>
+{% endblock %} 

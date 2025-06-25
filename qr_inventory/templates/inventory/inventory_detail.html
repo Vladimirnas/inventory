@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Детальная информация об инвентаризации{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Инвентаризация: {{ inventory.name }}</h2>
+        <div>
+            <a href="{% url 'inventory_history' %}" class="btn btn-outline-secondary">Назад к истории</a>
+            {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_departments_inventory' %}" class="btn btn-outline-secondary">Назад к подразделениям</a>
+            {% endif %}
+            {% if inventory.status == 'active' %}
+            <a href="{% url 'complete_inventory' inventory.id %}" class="btn btn-primary">Завершить инвентаризацию</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Основная информация</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Тип:</strong> {{ inventory.get_inventory_type_display }}</p>
+                    <p><strong>Статус:</strong> {{ inventory.get_status_display }}</p>
+                    <p><strong>Подразделение:</strong> {{ inventory.department.name|default:"Не указано" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Дата начала:</strong> {{ inventory.start_date }}</p>
+                    <p><strong>Дата завершения:</strong> {{ inventory.date_completed|default:"Не завершена" }}</p>
+                    <p><strong>Создатель:</strong> {{ inventory.created_by.get_full_name|default:inventory.created_by.username }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Список имущества ({{ items|length }})</h5>
+            <div class="input-group" style="width: 300px;">
+                <input type="text" id="searchInput" class="form-control" placeholder="Поиск...">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Инв. номер</th>
+                            <th>Наименование</th>
+                            <th>Всего</th>
+                            <th>Отсканировано</th>
+                            <th>Помещение</th>
+                            <th>Подразделение</th>
+                            <!-- <th>Статус</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.inventory_number }}</td>
+                            <td>{{ item.asset_name }}</td>
+                            <td>{{ item.total_quantity }}</td>
+                            <td>{{ item.scanned_quantity }}</td>
+                            <td>{{ item.location_name }}</td>
+                            <td>{{ item.department_name }}</td>
+                            <!-- <td>
+                                {% if item.scanned_quantity > 0 %}
+                                <span class="badge bg-success">Просканировано</span>
+                                {% else %}
+                                <span class="badge bg-danger">Не просканировано</span>
+                                {% endif %}
+                            </td> -->
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Нет данных</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Поиск по таблице
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', function() {
+        const searchText = this.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            let show = true;
+            const inventoryNumber = row.children[1].textContent.toLowerCase();
+            const assetName = row.children[2].textContent.toLowerCase();
+            
+            if (!inventoryNumber.includes(searchText) && !assetName.includes(searchText)) {
+                show = false;
+            }
+            
+            row.style.display = show ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}QR-коды помещений{% endblock %}
+
+{% block extra_css %}
+<style>
+    .qr-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        max-width: 350px;
+    }
+
+    .qr-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .qr-card .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .qr-card .card-body {
+        padding: 20px;
+    }
+
+    .qr-image {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    .qr-controls {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .qr-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .qr-header {
+        margin-bottom: 30px;
+    }
+
+    .btn-add-qr {
+        margin-bottom: 20px;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        background-color: white;
+        color: #000;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-add-qr:hover {
+        background-color: #03FFAF;
+        color: #000;
+        transform: translateX(5px);
+    }
+    
+    .btn-delete {
+        color: #dc3545;
+        border: 1px solid #dc3545;
+        background-color: transparent;
+    }
+    
+    .btn-delete:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 0;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .print-actions {
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .print-btn {
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        background-color: white;
+        color: #000;
+        border: 1px solid #dee2e6;
+    }
+    
+    .print-btn:hover {
+        background-color: #03FFAF;
+        color: #000;
+        transform: translateX(5px);
+    }
+    
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .print-checkbox {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="qr-container">
+    <div class="qr-header">
+        <h1 class="mb-4">QR-коды помещений</h1>
+        <a href="{% url 'create_location' %}" class="btn btn-add-qr">
+            <i class="bi bi-plus-circle me-2"></i> Добавить новое помещение
+        </a>
+        
+        <!-- Кнопки для печати -->
+        <div class="print-actions">
+            <button id="printSelectedBtn" class="print-btn" disabled>
+                <i class="bi bi-printer"></i> Печать выбранных
+            </button>
+            <a href="{% url 'print_location_qr_codes' %}" class="print-btn" target="_blank">
+                <i class="bi bi-printer"></i> Печать всех
+            </a>
+        </div>
+    </div>
+    
+    {% if locations %}
+    <div class="row">
+        {% for location in locations %}
+        <div class="col-md-4">
+            <div class="card qr-card" id="location-card-{{ location.id }}">
+                <div class="card-header">
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="print-checkbox" data-location-id="{{ location.id }}">
+                        <h5 class="card-title mb-0">{{ location.name }}</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ location.qr_image.url }}" alt="QR код {{ location.name }}" class="img-fluid qr-image mb-3">
+                        <p><strong>Код:</strong> {{ location.qr_code }}</p>
+                        <p><strong>Оборудования:</strong> {{ location.equipment_count }}</p>
+                    </div>
+                    <div class="qr-controls">
+                        <a href="{% url 'location_detail' location.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye-fill"></i> Просмотр
+                        </a>
+                        <a href="{{ location.qr_image.url }}" download="QR_{{ location.name|slugify }}.png" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-download"></i> Скачать QR
+                        </a>
+                        <a href="{% url 'delete_location' location.id %}" class="btn btn-sm btn-delete">
+                            <i class="bi bi-trash"></i> Удалить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-building"></i>
+        <h3>Нет QR-кодов помещений</h3>
+        <p>Создайте новый QR-код для помещения, чтобы начать учет оборудования по местам.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обработка выбора элементов для печати
+        const checkboxes = document.querySelectorAll('.print-checkbox');
+        const printSelectedBtn = document.getElementById('printSelectedBtn');
+        
+        // Отслеживаем изменения чекбоксов
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updatePrintButton);
+        });
+        
+        // Обновляем состояние кнопки печати
+        function updatePrintButton() {
+            const checkedBoxes = document.querySelectorAll('.print-checkbox:checked');
+            
+            if (checkedBoxes.length > 0) {
+                printSelectedBtn.disabled = false;
+                
+                // Собираем ID выбранных элементов
+                const selectedIds = Array.from(checkedBoxes).map(item => item.dataset.locationId);
+                
+                // Обновляем действие кнопки печати
+                printSelectedBtn.onclick = function() {
+                    window.open(`{% url 'print_location_qr_codes' %}?ids=${selectedIds.join(',')}`, '_blank');
+                    return false;
+                };
+            } else {
+                printSelectedBtn.disabled = true;
+            }
+        }
+    });
+</script>
+{% endblock %} 

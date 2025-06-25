@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Информация о пользователе{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h2 class="card-title h5 mb-0">Информация о пользователе</h2>
+                    <div>
+                        <a href="{% url 'user_update' user_obj.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Редактировать
+                        </a>
+                        <a href="{% url 'user_list' %}" class="btn btn-sm btn-outline-secondary ms-2">
+                            <i class="bi bi-arrow-left"></i> К списку
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Логин:</div>
+                        <div class="col-md-8">{{ user_obj.username }}</div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">ФИО:</div>
+                        <div class="col-md-8">
+                            {% if user_obj.profile %}
+                                {{ user_obj.profile.full_name }}
+                            {% else %}
+                                {{ user_obj.last_name }} {{ user_obj.first_name }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Email:</div>
+                        <div class="col-md-8">{{ user_obj.email }}</div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Подразделение:</div>
+                        <div class="col-md-8">
+                            {% if user_obj.profile and user_obj.profile.department %}
+                                {{ user_obj.profile.department.name }}
+                            {% else %}
+                                Не указано
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Статус:</div>
+                        <div class="col-md-8">
+                            {% if user_obj.is_active %}
+                                <span class="badge bg-success">Активен</span>
+                            {% else %}
+                                <span class="badge bg-danger">Неактивен</span>
+                            {% endif %}
+                            
+                            {% if user_obj.is_staff %}
+                                <span class="badge bg-warning text-dark ms-2">Администратор</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Дата регистрации:</div>
+                        <div class="col-md-8">{{ user_obj.date_joined|date:"d.m.Y H:i" }}</div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 fw-bold">Последний вход:</div>
+                        <div class="col-md-8">
+                            {% if user_obj.last_login %}
+                                {{ user_obj.last_login|date:"d.m.Y H:i" }}
+                            {% else %}
+                                Никогда не входил
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

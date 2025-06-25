@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование имущества{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h1 class="card-title">Редактирование имущества</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.inventory_number.id_for_label }}">{{ form.inventory_number.label }}</label>
+                                    {{ form.inventory_number }}
+                                    {% if form.inventory_number.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.inventory_number.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.asset_name.id_for_label }}">{{ form.asset_name.label }}</label>
+                                    {{ form.asset_name }}
+                                    {% if form.asset_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.asset_name.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.quantity.id_for_label }}">{{ form.quantity.label }}</label>
+                                    {{ form.quantity }}
+                                    {% if form.quantity.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.quantity.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.book_value.id_for_label }}">{{ form.book_value.label }}</label>
+                                    {{ form.book_value }}
+                                    {% if form.book_value.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.book_value.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.responsible.id_for_label }}">{{ form.responsible.label }}</label>
+                                    {{ form.responsible }}
+                                    {% if form.responsible.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.responsible.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.location_input.id_for_label }}">{{ form.location_input.label }}</label>
+                                    {{ form.location_input }}
+                                    <small class="form-text text-muted">Введите название помещения. Если его нет, оно будет создано автоматически.</small>
+                                    {{ form.location }}
+                                    {% if form.location.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.location.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.department.id_for_label }}">{{ form.department.label }}</label>
+                                    {{ form.department }}
+                                    {% if form.department.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.department.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.year_of_manufacture.id_for_label }}">{{ form.year_of_manufacture.label }}</label>
+                                    {{ form.year_of_manufacture }}
+                                    {% if form.year_of_manufacture.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.year_of_manufacture.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label>
+                                    {{ form.photo }}
+                                    {% if form.photo.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.photo.errors }}
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if asset.photo %}
+                                    <div class="mt-2">
+                                        <p>Текущее фото:</p>
+                                        <img src="{{ asset.photo.url }}" alt="Текущее фото" class="img-thumbnail" style="max-height: 150px;">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'property_detail' asset.id %}" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

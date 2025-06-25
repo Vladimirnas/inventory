@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Удаление пользователя{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title h5 mb-0">Удаление пользователя</h2>
+                </div>
+                <div class="card-body">
+                    <p class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i> 
+                        Вы уверены, что хотите удалить пользователя <strong>{{ user_obj.username }}</strong>?
+                    </p>
+                    
+                    <p>ФИО: 
+                        {% if user_obj.profile %}
+                            <strong>{{ user_obj.profile.full_name }}</strong>
+                        {% else %}
+                            <strong>{{ user_obj.last_name }} {{ user_obj.first_name }}</strong>
+                        {% endif %}
+                    </p>
+                    
+                    <p>Email: <strong>{{ user_obj.email }}</strong></p>
+                    
+                    <p class="text-danger mb-4">
+                        Это действие нельзя будет отменить. Все данные пользователя будут удалены из системы.
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'user_list' %}" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

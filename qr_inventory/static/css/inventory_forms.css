@@ -1,0 +1,136 @@
+@font-face {
+    font-family: 'Times New Roman';
+    src: local('Times New Roman');
+}
+
+@font-face {
+    font-family: 'Arial';
+    src: local('Arial');
+}
+
+@page {
+    margin: .79in .39in .39in .79in;
+    mso-header-margin: .2in;
+    mso-footer-margin: .2in;
+    mso-page-orientation: landscape;
+}
+
+@media print {
+    .header-section {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-align: left;
+    }
+}
+
+body {
+    margin: 20px;
+    margin-top: 40px;
+}
+
+.xl65 {
+    mso-style-parent: style0;
+    text-align: center;
+}
+
+.xl66 {
+    mso-style-parent: style0;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.xl73 {
+    mso-style-parent: style0;
+    text-align: center;
+    border: .5pt solid black;
+    background: #f8f9fa;
+}
+
+.table-header {
+    font-weight: bold;
+}
+
+.table-main {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-main th, .table-main td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+    font-size: 9pt;
+}
+
+.table-header-small td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+    font-size: 12pt !important;
+}
+
+.form-title {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.signature-section {
+    margin-top: 30px;
+}
+
+.signature-line {
+    border-bottom: 1px solid black;
+    display: inline-block;
+    width: 200px;
+    margin: 0 10px;
+}
+
+.header-section {
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+}
+
+.small-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 9pt;
+}
+
+.arial-small {
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+}
+
+/* Применяем шрифты к конкретным элементам */
+.form-header {
+    font-size: 12pt;
+    font-weight: bold !important;
+}
+
+.table-times th {
+    font-family: 'Times New Roman', serif;
+    font-size: 11pt;
+}
+
+.table-times td {
+    font-family: 'Times New Roman', serif;
+    font-size: 11pt;
+}
+
+.comment-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+}
+
+.times-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 11pt;
+}
+
+@media print {
+    .page-break {
+        page-break-before: always;
+    }
+} 

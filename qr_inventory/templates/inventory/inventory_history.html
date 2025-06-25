@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}История инвентаризаций{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">История инвентаризаций</h2>
+    
+    <div class="table-responsive mt-4">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Дата завершения</th>
+                    <th>Вид инвентаризации</th>
+                    <th>Подразделение</th>
+                    <th>Количество элементов</th>
+                    <th>ИНВ-18</th>
+                    <th>ИНВ-1</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inventory in history %}
+                <tr>
+                    <td>
+                        {% if inventory.date_completed %}
+                            {{ inventory.date_completed|date:"d.m.Y H:i" }}
+                        {% else %}
+                            Дата не указана
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if inventory.inventory_type == 'planned' %}
+                            Плановая
+                        {% else %}
+                            Внеплановая
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if inventory.department %}
+                            {{ inventory.department.name }}
+                        {% else %}
+                            Не указано
+                        {% endif %}
+                    </td>
+                    <td>{{ inventory.items_count }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'generate_inv18' inventory.id %}" 
+                               class="btn btn-info btn-sm">
+                                Просмотр
+                            </a>
+                            <a href="{% url 'generate_inv18_format' inventory.id 'pdf' %}" 
+                               class="btn btn-danger btn-sm">
+                                PDF
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'generate_inv1' inventory.id %}" 
+                               class="btn btn-success btn-sm">
+                                Просмотр
+                            </a>
+                            <a href="{% url 'generate_inv1_format' inventory.id 'pdf' %}" 
+                               class="btn btn-danger btn-sm">
+                                PDF
+                            </a>
+
+                            
+
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{% url 'inventory_detail' inventory.id %}" 
+                           class="btn btn-sm" style="background-color: #03FFAF; color: #000;">
+                            Просмотреть
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if not history %}
+    <div class="alert alert-info mt-4">
+        История инвентаризаций пуста
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

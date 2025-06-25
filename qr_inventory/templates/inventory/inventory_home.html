@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Инвентаризация{% endblock %}
+
+{% block extra_css %}
+<style>
+    .inventory-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .btn-inventory {
+        width: 100%;
+        margin: 10px 0;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        background-color: white;
+        color: #000;
+        border: 1px solid #dee2e6;
+    }
+    .btn-inventory:hover {
+        background-color: #03FFAF;
+        color: #000;
+        transform: translateX(5px);
+    }
+    .btn-inventory.active {
+        background-color: #03FFAF;
+        color: #000;
+        font-weight: 600;
+    }
+    .btn-inventory:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        transform: none;
+    }
+    .alert {
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="inventory-container">
+        <h1 class="text-center mb-4">Инвентаризация</h1>
+        
+        {% if has_active_inventory %}
+        <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            В данный момент проводится инвентаризация. Новую инвентаризацию можно будет начать только после завершения текущей.
+            <br>
+            <a href="{% url 'current_inventory' %}" class="alert-link">Перейти к текущей инвентаризации</a>
+        </div>
+        {% endif %}
+        
+        <div class="d-grid gap-3">
+            <button type="button" 
+                    class="btn btn-inventory" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#plannedInventoryModal"
+                    {% if has_active_inventory %}
+                    disabled
+                    title="Невозможно начать новую инвентаризацию, пока не завершена текущая"
+                    {% endif %}>
+                {% if has_active_inventory %}
+                <i class="fas fa-lock me-2"></i>
+                {% endif %}
+                Провести плановую инвентаризацию
+            </button>
+            
+            <button type="button" 
+                    class="btn btn-inventory" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#unplannedModal"
+                    {% if has_active_inventory %}
+                    disabled
+                    title="Невозможно начать новую инвентаризацию, пока не завершена текущая"
+                    {% endif %}>
+                {% if has_active_inventory %}
+                <i class="fas fa-lock me-2"></i>
+                {% endif %}
+                Провести внеплановую инвентаризацию
+            </button>
+            
+            <a href="{% url 'current_inventory' %}" class="btn btn-inventory" id="current-inventory-btn">
+                Текущая инвентаризация
+            </a>
+
+            <a href="{% url 'inventory_history' %}" class="btn btn-inventory" id="history-inventory-btn">
+                История инвентаризаций
+            </a>
+
+            <a href="{% url 'property_list' %}" class="btn btn-inventory">Вернуться на главную</a>
+        </div>
+    </div>
+
+    <!-- Модальное окно для плановой инвентаризации -->
+    <div class="modal fade" id="plannedInventoryModal" tabindex="-1" aria-labelledby="plannedInventoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="plannedInventoryModalLabel">Плановая инвентаризация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'planned_inventory' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Дата начала</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_date" class="form-label">Дата окончания</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Начать инвентаризацию</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для внеплановой инвентаризации -->
+    <div class="modal fade" id="unplannedModal" tabindex="-1" aria-labelledby="unplannedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unplannedModalLabel">Внеплановая инвентаризация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'unplanned_inventory' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Дата начала инвентаризации</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Начать инвентаризацию</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Устанавливаем минимальную дату как сегодня
+        var today = new Date().toISOString().split('T')[0];
+        
+        // Устанавливаем минимальные даты для всех полей даты
+        document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
+            dateInput.min = today;
+            dateInput.value = today;
+        });
+        
+        // Подсветка активного пункта меню
+        const currentUrl = window.location.pathname;
+        if (currentUrl.endsWith('/current')) {
+            document.getElementById('current-inventory-btn').classList.add('active');
+        } else if (currentUrl.endsWith('/history')) {
+            document.getElementById('history-inventory-btn').classList.add('active');
+        }
+    });
+</script>
+{% endblock %} 

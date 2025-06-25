@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Удаление помещения{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirm-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+    
+    .icon-warning {
+        font-size: 3rem;
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+    
+    .confirm-text {
+        margin-bottom: 30px;
+    }
+    
+    .equipment-warning {
+        background-color: #fff3cd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        text-align: left;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="confirm-container">
+        <i class="bi bi-exclamation-triangle-fill icon-warning"></i>
+        
+        <h1>Удаление помещения</h1>
+        
+        <div class="confirm-text">
+            <p class="fs-5">Вы действительно хотите удалить помещение <strong>{{ location.name }}</strong>?</p>
+            
+            {% if location.equipment_count > 0 %}
+            <div class="equipment-warning">
+                <p class="mb-1"><strong>Внимание!</strong> В этом помещении находится оборудование ({{ location.equipment_count }} шт).</p>
+                <p class="mb-0">При удалении помещения оборудование будет помечено как находящееся в неопределенном месте.</p>
+            </div>
+            {% endif %}
+            
+            <p>Это действие нельзя будет отменить.</p>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'location_detail' location.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Отмена
+            </a>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить помещение
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

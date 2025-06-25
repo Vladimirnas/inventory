@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+
+{% block title %}Текущая инвентаризация{% endblock %}
+
+{% block extra_css %}
+<style>
+    .progress {
+        height: 25px;
+        margin-bottom: 20px;
+    }
+    .item-row {
+        transition: all 0.3s ease;
+    }
+    .item-row:hover {
+        background-color: #f8f9fa;
+    }
+    .verified {
+        background-color: #03FFAF !important;
+    }
+    .partial {
+        background-color: #fff3cd !important;
+    }
+    .not-verified {
+        background-color: #f8d7da !important;
+    }
+    .badge-container {
+        position: relative;
+    }
+    .badge-status {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+    .scanner-container, .status-container {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .inventory-info {
+        padding: 15px;
+        background-color: #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .filter-container {
+        margin-bottom: 20px;
+    }
+    .scan-section {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 100;
+        padding: 15px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    @media (max-width: 767px) {
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Текущая инвентаризация</h2>
+        <div>
+            <a href="{% url 'inventory_home' %}" class="btn btn-secondary">Назад к инвентаризации</a>
+            {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_departments_inventory' %}" class="btn btn-secondary">
+                <i class="bi bi-building"></i> Инвентаризации по подразделениям
+            </a>
+            {% endif %}
+            {% if inventory %}
+            <a href="{% url 'complete_inventory' pk=inventory.id %}" class="btn" style="background-color: #03FFAF; color: #000;" onclick="return confirm('Вы уверены, что хотите завершить текущую инвентаризацию?');">
+                <i class="bi bi-check-circle"></i> Завершить инвентаризацию
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if not inventory %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        В данный момент не проводится инвентаризация. Чтобы начать новую инвентаризацию, вернитесь на главную страницу.
+    </div>
+    {% else %}
+    
+    <div class="inventory-info">
+        <h4>Информация об инвентаризации</h4>            <div class="row">
+            <div class="col-md-4">
+                <p><strong>Тип инвентаризации:</strong> {{ inventory.get_inventory_type_display }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Дата начала:</strong> {{ inventory.start_date|date:"d.m.Y" }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Прогресс:</strong> {{ scanned_count }} из {{ total_count }} ({{ progress }}%)</p>
+            </div>
+        </div>
+        
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress }}%" 
+                 aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                {{ progress }}%
+            </div>
+        </div>
+    </div>
+    
+    <div class="status-section">
+        <div class="status-container scanner-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group mb-3">
+                        <input type="text" id="search-input" class="form-control" placeholder="Поиск по наименованию, инвентарному номеру или помещению...">
+                        <button class="btn btn-outline-secondary" type="button" id="clear-search">
+                            <i class="bi bi-x"></i> Очистить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="filter-container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group w-100">
+                    <button type="button" class="btn btn-outline-secondary filter-btn active" data-filter="all">Все</button>
+                    <button type="button" class="btn btn-outline-success filter-btn" data-filter="verified">Проверено</button>
+                    <button type="button" class="btn btn-outline-warning filter-btn" data-filter="partial">Частично проверено</button>
+                    <button type="button" class="btn btn-outline-danger filter-btn" data-filter="not-verified">Не проверено</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-bordered" id="inventory-table">
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th width="15%">Инв. номер</th>
+                    <th>Наименование</th>
+                    <th>Помещение</th>
+                    <th>Подразделение</th>
+                    <th>Всего</th>
+                    <th>Количество</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr class="item-row {% if item.scanned_quantity == item.total_quantity and item.total_quantity > 0 %}verified{% elif item.scanned_quantity > 0 %}partial{% else %}not-verified{% endif %}" 
+                    data-inventory-id="{{ item.id }}"
+                    data-status="{% if item.scanned_quantity == item.total_quantity and item.total_quantity > 0 %}verified{% elif item.scanned_quantity > 0 %}partial{% else %}not-verified{% endif %}"
+                    data-location="{{ item.location_id|default:'' }}"
+                    data-total="{{ item.total_quantity }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.inventory_number }}</td>
+                    <td>{{ item.asset_name }}</td>
+                    <td>{{ item.location_name }}</td>
+                    <td>{{ item.department_name }}</td>
+                    <td>{{ item.total_quantity }}</td>
+                    <td>
+                        <input type="number" class="form-control item-quantity" 
+                              min="0" max="{{ item.total_quantity }}" value="{{ item.scanned_quantity }}"
+                              data-item-id="{{ item.id }}">
+                    </td>
+                    <td>
+                        <select class="form-select status-select" data-item-id="{{ item.id }}">
+                            <option value="not-verified" {% if item.scanned_quantity == 0 %}selected{% endif %}>Не проверено</option>
+                            <option value="partial" {% if item.scanned_quantity > 0 and item.scanned_quantity < item.total_quantity %}selected{% endif %}>Частично</option>
+                            <option value="verified" {% if item.scanned_quantity == item.total_quantity and item.total_quantity > 0 %}selected{% endif %}>Проверено</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+{% if inventory %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const statusSelects = document.querySelectorAll('.status-select');
+        const quantityInputs = document.querySelectorAll('.item-quantity');
+        
+        // Функция для подсчета и обновления общего прогресса
+        function updateTotalProgress() {
+            const allItems = document.querySelectorAll('.item-quantity');
+            let totalChecked = 0;
+            let totalItems = 0;
+            
+            allItems.forEach(item => {
+                const quantity = parseInt(item.value) || 0;
+                const maxQuantity = parseInt(item.getAttribute('max')) || 0;
+                
+                totalChecked += quantity;
+                totalItems += maxQuantity;
+            });
+            
+            // Обновляем отображение прогресса
+            const progressPercent = totalItems > 0 ? Math.round((totalChecked / totalItems) * 100) : 0;
+            const progressBar = document.querySelector('.progress-bar');
+            
+            // Находим элемент с текстом прогресса
+            let progressText = null;
+            const paragraphs = document.querySelectorAll('.col-md-4 p');
+            paragraphs.forEach(p => {
+                if (p.textContent.includes('Прогресс:')) {
+                    progressText = p;
+                }
+            });
+            
+            if (progressBar) {
+                progressBar.style.width = `${progressPercent}%`;
+                progressBar.setAttribute('aria-valuenow', progressPercent);
+                progressBar.textContent = `${progressPercent}%`;
+            }
+            
+            if (progressText) {
+                progressText.innerHTML = `<strong>Прогресс:</strong> ${totalChecked} из ${totalItems} (${progressPercent}%)`;
+            }
+        }
+        
+        // Функция для обновления статуса имущества
+        function updateItemStatus(itemId, status, quantity) {
+            fetch('/inventory/update-status/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 
+                    item_id: itemId, 
+                    status: status,
+                    quantity: quantity 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обновляем визуальный вид строки таблицы
+                    const row = document.querySelector(`tr[data-inventory-id="${itemId}"]`);
+                    if (row) {
+                        // Удаляем все классы статуса
+                        row.classList.remove('verified', 'partial', 'not-verified');
+                        
+                        // Добавляем соответствующий класс
+                        row.classList.add(status);
+                        row.dataset.status = status;
+                    }
+                    
+                    // Обновляем общий прогресс
+                    updateTotalProgress();
+                } else {
+                    alert('Ошибка: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при обновлении статуса');
+            });
+        }
+        
+        // Обработчик изменения статуса
+        statusSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                const itemId = this.dataset.itemId;
+                const status = this.value;
+                const quantityInput = document.querySelector(`.item-quantity[data-item-id="${itemId}"]`);
+                const quantity = quantityInput ? quantityInput.value : 0;
+                
+                updateItemStatus(itemId, status, quantity);
+            });
+        });
+        
+        // Обработчик изменения количества
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const itemId = this.dataset.itemId;
+                const quantity = parseInt(this.value) || 0;
+                const row = this.closest('tr');
+                const totalQuantity = parseInt(row.dataset.total) || 0;
+                const statusSelect = document.querySelector(`.status-select[data-item-id="${itemId}"]`);
+                
+                // Автоматически определяем статус на основе количества
+                let status = 'not-verified';
+                if (quantity > 0) {
+                    if (quantity >= totalQuantity) {
+                        status = 'verified';
+                    } else {
+                        status = 'partial';
+                    }
+                }
+                
+                // Обновляем значение в селекте
+                if (statusSelect) {
+                    statusSelect.value = status;
+                }
+                
+                updateItemStatus(itemId, status, quantity);
+            });
+        });
+        
+        // Поиск по тексту
+        searchInput.addEventListener('input', filterItems);
+        
+        // Очистка поиска
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            filterItems();
+        });
+        
+        // Фильтрация по статусу
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterItems();
+            });
+        });
+        
+        // Функция фильтрации элементов
+        function filterItems() {
+            const searchText = searchInput.value.toLowerCase();
+            const statusFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            
+            const rows = document.querySelectorAll('#inventory-table tbody tr');
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                // Фильтр по тексту
+                if (searchText) {
+                    const inventoryNumber = row.cells[1].textContent.toLowerCase();
+                    const assetName = row.cells[2].textContent.toLowerCase();
+                    const locationName = row.cells[3].textContent.toLowerCase();
+                    const departmentName = row.cells[4].textContent.toLowerCase();
+                    
+                    if (!inventoryNumber.includes(searchText) && 
+                        !assetName.includes(searchText) && 
+                        !locationName.includes(searchText) && 
+                        !departmentName.includes(searchText)) {
+                        show = false;
+                    }
+                }
+                
+                // Фильтр по статусу
+                if (statusFilter !== 'all' && row.dataset.status !== statusFilter) {
+                    show = false;
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endif %}
+{% endblock %} 

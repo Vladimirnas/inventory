@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Добавление имущества{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_property.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h1 class="card-title">Добавление нового имущества</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="propertyForm">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.inventory_number.id_for_label }}" class="required-field">{{ form.inventory_number.label }}</label>
+                                    {{ form.inventory_number }}
+                                    <div class="invalid-tooltip" id="inventoryNumberError">
+                                        Инвентарный номер должен содержать только цифры
+                                    </div>
+                                    {% if form.inventory_number.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.inventory_number.errors }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="hint-text">Только цифры</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.asset_name.id_for_label }}" class="required-field">{{ form.asset_name.label }}</label>
+                                    {{ form.asset_name }}
+                                    {% if form.asset_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.asset_name.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.quantity.id_for_label }}" class="required-field">{{ form.quantity.label }}</label>
+                                    {{ form.quantity }}
+                                    {% if form.quantity.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.quantity.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.book_value.id_for_label }}">{{ form.book_value.label }}</label>
+                                    {{ form.book_value }}
+                                    <div class="invalid-tooltip" id="bookValueError">
+                                        Балансовая стоимость должна содержать только цифры и точку
+                                    </div>
+                                    {% if form.book_value.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.book_value.errors }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="hint-text">Только цифры и точка</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.responsible.id_for_label }}">{{ form.responsible.label }}</label>
+                                    {{ form.responsible }}
+                                    <div class="invalid-tooltip" id="responsibleError">
+                                        Поле "Ответственный" должно содержать только буквы, пробелы и тире
+                                    </div>
+                                    {% if form.responsible.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.responsible.errors }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="hint-text">Только буквы, пробелы и тире</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.location_input.id_for_label }}">{{ form.location_input.label }}</label>
+                                    {{ form.location_input }}
+                                    {{ form.location }}
+                                    {% if form.location.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.location.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.department.id_for_label }}">{{ form.department.label }}</label>
+                                    {{ form.department }}
+                                    {% if form.department.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.department.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.year_of_manufacture.id_for_label }}">{{ form.year_of_manufacture.label }}</label>
+                                    {{ form.year_of_manufacture }}
+                                    <div class="invalid-tooltip" id="yearError">
+                                        Год выпуска должен содержать только 4 цифры
+                                    </div>
+                                    {% if form.year_of_manufacture.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.year_of_manufacture.errors }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="hint-text">Только 4 цифры</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="form-group file-upload-section">
+                                    
+                                    <div class="photo-upload-wrapper">
+                                        <div class="photo-upload-container">
+                                            <div class="upload-content">
+                                                <i class="bi bi-cloud-arrow-up"></i>
+                                                <div class="text-content">
+                                                    <p class="upload-text">Нажмите или перетащите фото</p>
+                                                    <p class="upload-subtext">JPG/PNG до 5MB</p>
+                                                </div>
+                                            </div>
+                                            <img id="photoPreview" class="photo-preview" src="#" alt="Предпросмотр">
+                                    {{ form.photo }}
+                                        </div>
+                                    </div>
+                                    {% if form.photo.errors %}
+                                    <div class="invalid-feedback d-block text-center">
+                                        {{ form.photo.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'property_list' %}" class="btn btn-secondary">
+                                Назад
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Добавить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/add_property.js' %}"></script>
+{% endblock %} 

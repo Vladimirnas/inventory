@@ -1,0 +1,17 @@
+{% extends "inventory/inv18.html" %}
+
+{% block extra_css %}
+{{ block.super }}
+    <style>
+        @page {
+        size: landscape;
+        margin: 2cm;
+    }
+        body {
+        font-size: 10pt;
+    }
+    .no-print {
+        display: none;
+    }
+    </style>
+{% endblock %} 

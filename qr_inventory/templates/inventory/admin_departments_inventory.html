@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Инвентаризации по подразделениям{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 15px 20px;
+    }
+    .progress {
+        height: 20px;
+        margin-bottom: 0;
+    }
+    .department-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .progress-bar {
+        background-color: #03FFAF;
+        color: #000;
+    }
+    .view-inventory-btn {
+        background-color: #03FFAF;
+        color: #000;
+        border: none;
+        transition: all 0.2s ease;
+    }
+    .view-inventory-btn:hover {
+        background-color: #00e69d;
+        color: #000;
+        transform: translateX(3px);
+    }
+    .page-header {
+        margin-bottom: 30px;
+    }
+    .empty-message {
+        text-align: center;
+        padding: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        margin-top: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center page-header">
+        <h2>Инвентаризации по подразделениям</h2>
+        <div>
+            <a href="{% url 'inventory_home' %}" class="btn btn-secondary">Назад к инвентаризации</a>
+        </div>
+    </div>
+    
+    {% if inventories %}
+        <div class="row">
+            {% for inventory in inventories %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="department-name">{{ inventory.department }}</span>
+                            <span class="badge bg-primary">{{ inventory.start_date|date:"d.m.Y" }}</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ inventory.name }}</h5>
+                            <p class="card-text">Создал: {{ inventory.created_by }}</p>
+                            <p class="card-text">Проверено: {{ inventory.scanned_count }} из {{ inventory.items_count }}</p>
+                            
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ inventory.progress }}%" 
+                                     aria-valuenow="{{ inventory.progress }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {{ inventory.progress }}%
+                                </div>
+                            </div>
+                            
+                            <a href="{% url 'inventory_detail' pk=inventory.id %}" 
+                               class="btn view-inventory-btn float-end">
+                                Просмотр инвентаризации <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-message">
+            <h4><i class="bi bi-info-circle-fill me-2"></i> Нет активных инвентаризаций</h4>
+            <p>В данный момент не проводится ни одна инвентаризация по подразделениям.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Печать QR-кодов имущества</title>
+    <link rel="stylesheet" href="/static/css/print_qr.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header no-print">
+            <h1>Печать QR-кодов имущества</h1>
+            <p>Настроено для принтера этикеток Godex 500 (размер этикетки 5см x 3см)</p>
+            <button class="print-btn" onclick="window.print()">Печать</button>
+            <a href="{% url 'property_list' %}" class="back-btn">Назад</a>
+        </div>
+        
+        <div class="print-grid">
+            {% for item in items %}
+                <div class="qr-item">
+                    <!-- <img class="logo" src="/static/img/logo_sb.svg" alt="Логотип"> -->
+                    <img class="qr-code-img" src="{{ item.qr_image.url }}" alt="QR код {{ item.inventory_number }}">
+                    <div class="qr-info">
+                        <div class="qr-name">{{ item.inventory_number }}</div>
+                        <div class="qr-code">{{ item.asset_name }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="/static/js/print_qr.js"></script>
+</body>
+</html> 

@@ -1,0 +1,184 @@
+.table th, .table td {
+    vertical-align: middle;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.asset-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.actions-column {
+    white-space: nowrap;
+    text-align: center;
+}
+
+.filter-bar {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.badge-status {
+    font-size: 0.9em;
+    padding: 5px 10px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    min-width: 1500px;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.select-items {
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #03FFAF;
+    border-color: #03FFAF;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #02e09a;
+    border-color: #02e09a;
+    color: #000;
+}
+
+.btn-outline-primary {
+    color: #03FFAF;
+    border-color: #03FFAF;
+}
+
+.btn-outline-primary:hover {
+    background-color: #03FFAF;
+    border-color: #03FFAF;
+    color: #000;
+}
+
+.page-item.active .page-link {
+    background-color: #03FFAF;
+    border-color: #03FFAF;
+    color: #000;
+}
+
+.page-link {
+    color: #03FFAF;
+}
+
+.page-link:hover {
+    color: #02e09a;
+}
+
+.th-content {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    align-items: center;
+    gap: 5px;
+}
+
+.th-content span {
+    white-space: nowrap;
+    text-align: center;
+    display: block;
+    padding-right: 5px;
+}
+
+.sort-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    margin-left: auto;
+}
+
+.sort-icon {
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    line-height: 1;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+}
+
+.sort-icon:hover {
+    background-color: #e9ecef;
+    color: #000;
+}
+
+.sort-icon.active {
+    color: #fff;
+    background-color: #03FFAF;
+    border-color: #03FFAF;
+}
+
+th {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+th:hover .sort-icons {
+    opacity: 1;
+}
+
+/* Удаляем старые стили */
+.sort-up,
+.sort-down {
+    margin: 0;
+}
+
+/* Удаляем старые стили для сортировки */
+.sort-icon.asc::before,
+.sort-icon.desc::before {
+    content: none;
+}
+
+.header-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.search-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Исключение для колонки с чекбоксом */
+.table th:first-child,
+.table td:first-child {
+    text-align: center;
+}
+
+/* Исключение для колонки с действиями */
+.table th:last-child,
+.table td:last-child {
+    text-align: center;
+} 

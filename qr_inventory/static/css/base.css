@@ -1,0 +1,95 @@
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    margin-top: 0;
+    padding: 20px;
+    border-radius: 20px;
+    border: none;
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+}
+
+.dropdown-item {
+    padding: 12px 20px;
+    color: #000;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #03FFAF;
+    color: #000;
+    transform: translateX(5px);
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 10px 15px;
+    color: #000 !important;
+}
+
+.navbar {
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+.dropdown-toggle.show {
+    font-weight: 600;
+}
+
+.dropdown-menu {
+    animation: fadeIn 0.2s ease-in;
+    transform-origin: top;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Стиль для стрелочки в dropdown */
+.dropdown-toggle::after {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Увеличиваем отступы между пунктами меню */
+.dropdown-menu .dropdown-item:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+/* Стиль для курсора на основной части ссылки */
+.nav-link.dropdown-toggle {
+    cursor: pointer;
+}
+
+/* Стиль для курсора на стрелочке */
+.nav-link.dropdown-toggle:hover::after {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+/* Отступы между пунктами меню */
+.navbar-nav > .nav-item {
+    margin-right: 2rem;  
+}
+
+/* Убираем отступ у последнего пункта */
+.navbar-nav > .nav-item:last-child {
+    margin-right: 0;
+} 
